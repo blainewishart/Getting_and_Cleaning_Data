@@ -12,7 +12,7 @@
 ###    Where possible, we use the names inspired by the file name of the input file
 ###          Example: subjects is built from data/test|train/subject_train.txt
 ## download, and unzip data to known directory
-setwd("/Users/dev/Coursera/Getting_Cleaning_Data/course_project")  # make sure we are in the right directory
+setwd("/Users/dev/Coursera/Getting_Cleaning_Data/submission/Getting_and_Cleaning_Data")  # make sure we are in the right directory
 
 #### do by hand because unzip is not working under OSX
             #if (file.exists("data")) unlink("data", recursive=TRUE)  #delete any exising data directory so we have clean slate
@@ -96,39 +96,3 @@ uci_har_melt<-melt(uci_har_reduced, id=c("subject", "activity"), measure.vars=c(
 #cylData <- dcast(carMelt, cyl ~ variable,mean)
 uci_har_data<- dcast(uci_har_melt, subject ~ activity + variable, mean)
 write.table(uci_har_data,file="uci_har_data.txt")
-
-# uci_data has 30 obs (one for each subject) and 289 variables -- the subject and the mean of 288 measurements.
-# 288 is the proper value because the columns reflect 48 original values x the 6 different activies. All are labled with
-# terms like "walking_upstairs_fBodyAcc-std-X", which can be easily traced backt to the orginal data can can be understood as
-# the mean of walking up stairs measurements passed through the FFT 
-# filter for the X dimenton of Body Acceleration's standard deviation.
-# That is a mouthfull, but it all can be generated from the name and traced back to the original flat file data with ease.
-
-### produces 30 obs of 49 vars !!!! vars need rename
-### need a new var with a unique value for every uniqe subject-activity combination
-### then uci_data<-dcast(uci_melt, NEW_VAE ~ variable, mean)
-
-
-!! subset to get the slice corresponding to subject-X and activity-Y
-apply or sapply will get teh mean of all its columns use that to build one of 180 rows
-
-you really want 
-apply(select distincet (data columns), some function like mean)494
-
-
-for (i in 1:30){
-  a<-subset(uci_har_reduced, activity=="walking" & subject==i)
-  print(length(a))
-}
-
-line_count<- 0
-row_total<- 0
-for (i in 1:30){
-  for (j in 1:6){
-    line_count = line_count+1
-    a<-subset(uci_har, activity==j & subject==i)
-    b<- nrow(a)
-    row_total<- row_total + b
-    print(sprintf("activity %i and subject %i have length %i at line count %i with rows so far %i", i,j,b, line_count, row_total))
-  }
-}
